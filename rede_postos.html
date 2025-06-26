@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Mapa Interativo das Redes de Postos</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <style>
+    #map { height: 90vh; width: 100%; }
+    .legend {
+      background: white;
+      padding: 8px 12px;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      border-radius: 6px;
+      line-height: 1.6em;
+    }
+    .legend span {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      border-radius: 4px;
+      vertical-align: middle;
+    }
+    .aldo { background: #1f77b4; }
+    .hg { background: #ff7f0e; }
+    .nazarão { background: #2ca02c; }
+  </style>
+</head>
+<body>
+
+  <h2 style="text-align:center; margin-top: 12px;">Mapa Interativo das Redes de Postos</h2>
+  <div id="map"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // Criar mapa centrado no Brasil
+    const map = L.map('map').setView([-15.8, -47.9], 4);
+
+    // Adicionar camada base OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Cores das redes
+    const colors = {
+      "Aldo": "#1f77b4",       // azul
+      "HG": "#ff7f0e",         // laranja
+      "Grupo Nazarão": "#2ca02c" // verde
+    };
+
+    // Função para criar marcadores circulares coloridos com popup
+    function addMarker(lat, lon, popupText, color) {
+      L.circleMarker([lat, lon], {
+        radius: 7,
+        fillColor: color,
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+      }).addTo(map).bindPopup(popupText);
+    }
+
+    // --- Rede Aldo ---
+    const aldo = [
+      { city: "Cuiabá/MT", lat: -15.6014, lon: -56.0979 },
+      { city: "Rondonópolis/MT", lat: -16.4704, lon: -54.6371 },
+      { city: "Primavera do Leste/MT", lat: -15.5271, lon: -54.3174 },
+      { city: "Sorriso/MT", lat: -12.5107, lon: -55.7277 },
+      { city: "Itaituba/PA", lat: -4.2798, lon: -55.9938 },
+      { city: "Barcarena/PA", lat: -1.5134, lon: -48.6175 },
+      { city: "Jataí/GO", lat: -17.7979, lon: -51.7145 },
+      { city: "Cubatão/SP", lat: -23.8958, lon: -46.4241 },
+      { city: "São José dos Pinhais/PR", lat: -25.5302, lon: -49.2096 },
+      { city: "Paranaguá/PR", lat: -25.5166, lon: -48.5187 },
+      { city: "Maringá/PR", lat: -23.4203, lon: -51.9336 },
+      { city: "Barreiras/BA", lat: -12.1527, lon: -44.9916 },
+      { city: "Porto Franco/MA", lat: -6.5998, lon: -47.4553 },
+      { city: "São Luís/MA", lat: -2.5307, lon: -44.3068 }
+    ];
+    aldo.forEach(p => addMarker(p.lat, p.lon, `<b>Rede Aldo</b><br>${p.city}`, colors["Aldo"]));
+
+    // --- Rede HG ---
+    const hg = [
+      { city: "Antônio Cardoso, BA", lat: -12.333, lon: -38.849, posto: "Posto Grão de Ouro" },
+      { city: "Rafael Jambeiro, BA", lat: -12.429, lon: -39.144, posto: "Posto Maracanã" },
+      { city: "Jequié, BA", lat: -13.851, lon: -40.086, posto: "Posto Parque dos Coqueiros" },
+      { city: "Brejões, BA", lat: -13.437, lon: -39.844, posto: "Posto Novo Ponto" },
+      { city: "Planalto, BA", lat: -13.584, lon: -40.292, posto: "Posto Ultra" },
+      { city: "Vitória da Conquista, BA", lat: -14.859, lon: -40.837, posto: "Posto Ultra (3 unidades)" },
+      { city: "Itaobim, MG", lat: -15.318, lon: -42.314, posto: "Posto Dapo Lages III" },
+      { city: "Itaobim, MG", lat: -15.318, lon: -42.314, posto: "Posto Ururapu" },
+      { city: "Itaobim, MG", lat: -15.318, lon: -42.314, posto: "Posto Periquito" },
+      { city: "Frei Inocêncio, MG", lat: -16.157, lon: -41.675, posto: "Posto Casa Branca" },
+      { city: "Governador Valadares, MG", lat: -18.851, lon: -41.956, posto: "Postos Pinheiros, Cherokee, Ferrari" },
+      { city: "Engenheiro Caldas, MG", lat: -20.885, lon: -42.845, posto: "Posto JR" },
+      { city: "Caratinga, MG", lat: -19.782, lon: -42.136, posto: "Posto São Rafael" },
+      { city: "Além Paraíba, MG", lat: -21.881, lon: -42.548, posto: "Posto Diskinha" },
+      { city: "Catolândia, BA", lat: -12.310, lon: -44.517, posto: "Posto Barreiras" },
+      { city: "Salvador, BA", lat: -12.971, lon: -38.501, posto: "Posto Salvador" },
+      { city: "Cariri do Tocantins, TO", lat: -10.205, lon: -48.671, posto: "Posto Gurupi" },
+      { city: "Talismã, TO", lat: -12.248, lon: -49.197, posto: "Posto Talismã" },
+      { city: "Curvelo, MG", lat: -18.754, lon: -44.422, posto: "Posto Quilometragem" },
+      { city: "Montes Claros, MG", lat: -16.725, lon: -43.857, posto: "Posto Flass" },
+      { city: "Montes Claros, MG", lat: -16.725, lon: -43.857, posto: "Postos Terminal II, Norte de Minas, MMC" },
+      { city: "Campos Altos, MG", lat: -19.2, lon: -46.45, posto: "Posto Campos Altos" },
+      { city: "Córrego Danta, MG", lat: -19.228, lon: -46.526, posto: "Posto MG" },
+      { city: "Monte Carmelo, MG", lat: -18.739, lon: -47.588, posto: "Posto Centenário" },
+      { city: "Vargem, SP", lat: -22.978, lon: -46.905, posto: "Posto Bragança" },
+      { city: "Bragança Paulista, SP", lat: -22.952, lon: -46.541, posto: "Posto Bragança (3 unidades)" },
+      { city: "Sabará, MG", lat: -19.884, lon: -43.830, posto: "Posto Bragança" },
+      { city: "Periquito, MG", lat: -19.822, lon: -42.441, posto: "Posto Bragança" },
+      { city: "São Gonçalo dos Campos, BA", lat: -12.523, lon: -38.993, posto: "Posto Feira 101" },
+      { city: "Valença, BA", lat: -13.366, lon: -39.076, posto: "Posto Santo Antônio" },
+      { city: "Eunápolis, BA", lat: -16.369, lon: -39.072, posto: "Posto Sarcireco" },
+      { city: "Caravelas, BA", lat: -17.720, lon: -39.259, posto: "Posto Imperial" },
+      { city: "Linhares, ES", lat: -19.395, lon: -40.066, posto: "Posto Linhares" },
+      { city: "Delta, MG", lat: -19.601, lon: -47.342, posto: "Posto Eucaliptos" }
+    ];
+    hg.forEach(p => {
+      addMarker(p.lat, p.lon, `<b>Rede HG</b><br>${p.city}<br><i>${p.posto}</i>`, colors["HG"]);
+    });
+
+    // --- Grupo Nazarão ---
+    const nazarao = [
+      { city: "Cachoeiro de Itapemirim, ES", lat: -20.847, lon: -41.117,
+        postos: ["Posto União", "Posto Soturno", "Posto Santa Clara", "Posto União das Pedras", "Auto Posto Fontes", "Auto Posto Trevo", "Posto Machado", "Auto Posto Alvorada", "Posto Brasil", "Posto Avenida", "Posto São Judas Tadeu", "Posto Baianas", "Posto Pedra da Ema"] },
+      { city: "Marataízes, ES", lat: -21.043, lon: -40.852,
+        postos: ["Auto Posto Pérola Capixaba", "Posto Lajes"] },
+      { city: "Linhares, ES", lat: -19.395, lon: -40.066,
+        postos: ["Super Posto Jequitibá"] },
+      { city: "São Mateus, ES", lat: -18.721, lon: -39.860,
+        postos: ["Posto Rio Negro", "Posto Tigrao"] },
+      { city: "Nova Venécia, ES", lat: -18.717, lon: -40.358,
+        postos: ["Posto Diamante Negro"] },
+      { city: "Vargem Alta, ES", lat: -20.601, lon: -41.360,
+        postos: ["Auto Posto Vila Maria"] },
+      { city: "Alegre (Celina), ES", lat: -20.744, lon: -41.563,
+        postos: ["Auto Posto Celina"] },
+      { city: "Guaçuí (Centro), ES", lat: -20.270, lon: -41.611,
+        postos: ["Posto Redenção"] },
+      { city: "Mimoso do Sul (Centro), ES", lat: -20.615, lon: -41.500,
+        postos: ["Auto Posto Fronteira"] },
+      { city: "Presidente Kennedy, ES", lat: -21.103, lon: -40.815,
+        postos: ["Posto Petromax"] },
+      { city: "Cariacica, ES", lat: -20.320, lon: -40.373,
+        postos: ["Auto Posto Nazarão de Cariacica"] },
+      { city: "Auto Caparaó, MG", lat: -20.533, lon: -41.967,
+        postos: ["Auto Posto Serra do Caparaó"] },
+      { city: "Faria Lemos (Centro), MG", lat: -21.043, lon: -42.048,
+        postos: ["Auto Posto Faria Lemos"] },
+      { city: "Dores do Rio Preto, MG", lat: -20.301, lon: -41.858,
+        postos: ["Posto Douradense"] },
+      { city: "Vieiras, MG", lat: -20.620, lon: -42.196,
+        postos: ["Auto Posto Vieiras"] },
+      { city: "São Francisco do Glória, MG", lat: -21.181, lon: -42.510,
+        postos: ["Auto Posto São Francisco do Glória"] },
+      { city: "Muriaé, MG", lat: -21.130, lon: -42.346,
+        postos: ["Posto Primeiro de Vermelho"] },
+      { city: "Teixeira de Freitas, BA", lat: -17.531, lon: -39.740,
+        postos: ["Posto Pau de Vela"] },
+      { city: "Buerarema, BA", lat: -14.949, lon: -39.252,
+        postos: ["Posto Timbuíba"] },
+      { city: "Itatiaia, RJ", lat: -22.479, lon: -44.753,
+        postos: ["Posto O Carretão"] }
+    ];
+    nazarao.forEach(p => {
+      const postosList = p.postos.map(post => `<li>${post}</li>`).join('');
+      const popup = `<b>Grupo Nazarão</b><br>${p.city}<br><ul>${postosList}</ul>`;
+      addMarker(p.lat, p.lon, popup, colors["Grupo Nazarão"]);
+    });
+
+    // Legenda
+    const legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function(map) {
+      const div = L.DomUtil.create('div', 'legend');
+      div.innerHTML += '<b>Redes de Postos</b><br>';
+      div.innerHTML += `<span class="aldo"></span> Aldo<br>`;
+      div.innerHTML += `<span class="hg"></span> HG<br>`;
+      div.innerHTML += `<span class="nazarão"></span> Grupo Nazarão<br>`;
+      return div;
+    };
+    legend.addTo(map);
+  </script>
+</body>
+</html>
